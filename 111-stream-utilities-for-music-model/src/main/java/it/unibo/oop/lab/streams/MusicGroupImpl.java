@@ -31,7 +31,7 @@ public final class MusicGroupImpl implements MusicGroup {
 
     @Override
     public Stream<String> orderedSongNames() {
-        return this.songs.stream().map(Song -> Song.songName).sorted();
+        return this.songs.stream().map(song -> song.songName).sorted();
     }
 
     @Override
@@ -62,7 +62,7 @@ public final class MusicGroupImpl implements MusicGroup {
         return this.songs.stream()
         .filter(song -> song.getAlbumName().isPresent())
         .filter(song -> song.getAlbumName().get().equals(albumName))
-        .mapToDouble(song -> song.getDuration()) 
+        .mapToDouble(Song::getDuration) 
         .average();
     }
 
@@ -78,7 +78,7 @@ public final class MusicGroupImpl implements MusicGroup {
     public Optional<String> longestAlbum() {
         return this.songs.stream()
         .filter(song -> song.getAlbumName().isPresent())
-        .collect(Collectors.groupingBy(song -> song.getAlbumName().get(), Collectors.summingDouble(Song -> Song.getDuration())))
+        .collect(Collectors.groupingBy(song -> song.getAlbumName().get(), Collectors.summingDouble(Song::getDuration)))
         .entrySet().stream()
         .max(Map.Entry.comparingByValue()) 
         .map(Map.Entry::getKey);
